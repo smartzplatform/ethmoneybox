@@ -60,7 +60,7 @@ Optional: Downgrade solc version for local truffle
 
     (cd node_modules/truffle/ && npm install solc@0.4.22)
 
-thruffle version still shows 0.4.23, but pragma solidity ^0.4.23; will work, showing that solc 0.4.22 is used.
+truffle version still shows 0.4.23, but pragma solidity ^0.4.23; will work, showing that solc 0.4.22 is used.
 
 Create boilerplate truffle project. truffle init creates some kind of shit structure for now, so do it by hands:
 
@@ -94,7 +94,7 @@ Create truffl-config.js with command
     _EOF
 
 
-Run local ethereum node with ganeche (biult in truffle) in a separate console and keep it running while testing contracts. 
+Run local ethereum node with ganeche (built in truffle) in a separate console and keep it running while testing contracts.
 
     ./node_modules/.bin/truffle develop
 
@@ -154,4 +154,4 @@ Create test file test/00-use_throw.js
     import expectThrow from '../submodules/openzeppelin-solidity/test/helpers/expectThrow';
     _EOF
 
-Tests should still pass if you installed bable or using node.js 10.0.0 and later
+Tests should still pass if you installed babel or using node.js 10.0.0 and later
