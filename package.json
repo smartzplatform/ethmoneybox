@@ -4,7 +4,7 @@
   "description": "moneybox contract for ethereum network written in solidity",
   "main": "index.js",
   "scripts": {
-    "test": "truffle test"
+    "test": "./node_modules/.bin/truffle test"
   },
   "repository": {
     "type": "git",
