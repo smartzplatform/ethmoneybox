@@ -1,0 +1,34 @@
+{
+  "name": "ethmoneybox",
+  "version": "1.0.0",
+  "description": "moneybox contract for ethereum network written in solidity",
+  "main": "index.js",
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mxpaul/ethmoneybox.git"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "example",
+    "smart",
+    "contract"
+  ],
+  "author": "mxpaul",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mxpaul/ethmoneybox/issues"
+  },
+  "homepage": "https://github.com/mxpaul/ethmoneybox#readme",
+  "devDependencies": {
+    "babel-env": "^2.4.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "solc": "^0.4.22",
+    "truffle": "^4.1.8"
+  }
+}
