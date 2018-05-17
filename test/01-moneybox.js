@@ -16,19 +16,13 @@ contract('MoneyBox', function(accounts) {
 		this.inst = await MoneyBox.new({from: acc.owner});
 	});
 
-	it('should have zero balance for any non-existing account', async function () {
-		(await this.inst.myBalance({from: acc.owner})).should.be.bignumber.equal(1);
-	});
-
-	it('should have zero balance for any non-existing account', function(done) {
-		this.inst.myBalance({from: acc.owner}).then(function(res) {
-			res.should.be.bignumber.equal(1);
-			done();
-		});
-	});
-
 	it('should have zero balance for any non-existing account', function() {
 		this.inst.myBalance({from: acc.owner}).should.eventually.be.bignumber.equal(1);
+	});
+
+	it('should throw from neverWork', function() {
+		//this.inst.neverWork({from: acc.owner}).should.eventually.be.rejected;
+		expectThrow(this.inst.neverWork({from: acc.owner}).should.eventually.not.be);
 	});
 
 });
