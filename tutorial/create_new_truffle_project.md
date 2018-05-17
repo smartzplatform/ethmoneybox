@@ -155,3 +155,8 @@ Create test file test/00-use_throw.js
     _EOF
 
 Tests should still pass if you installed babel or using node.js 10.0.0 and later
+
+Install chai-bignumber and chai-as-promised
+
+    npm install --save-dev chai chai-as-promised chai-bignumber
+
