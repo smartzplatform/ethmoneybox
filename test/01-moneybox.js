@@ -1,6 +1,7 @@
 'use strict';
 
 import expectThrow from '../submodules/openzeppelin-solidity/test/helpers/expectThrow';
+import expectEvent from '../submodules/openzeppelin-solidity/test/helpers/expectEvent';
 
 const BigNumber = web3.BigNumber;
 const chai =require('chai');
@@ -120,6 +121,39 @@ contract('MoneyBox', function(accounts) {
 		const goalAfterWithdrawal = await this.inst.myGoal({from: acc.anyone})
 		goalAfterWithdrawal.should.be.bignumber.zero;
 	});
+
+	it('should emit event when set a goal', async function() {
+		const sumToReach = web3.toWei('100', 'finney');
+		const trans = await this.inst.setGoal(sumToReach, {from: acc.anyone});
+		const Event = await expectEvent.inTransaction(trans, "GoalSet");
+		Event.should.have.deep.property('args', {amount: new BigNumber(sumToReach), account: acc.anyone});
+	});
+
+	it('should emit event when money added to the box', async function() {
+		const sumToReach = web3.toWei('100', 'finney');
+		await this.inst.setGoal(sumToReach, {from: acc.anyone});
+
+		const someEther = web3.toWei('10', 'finney')
+		const trans = await this.inst.addMoney({from: acc.anyone, value: someEther});
+		const Event = await expectEvent.inTransaction(trans, "MoneyAdded");
+		Event.should.have.nested.bignumber.property('args.amount').equal(someEther);
+		Event.should.have.nested.bignumber.property('args.deposit').equal(someEther);
+		Event.should.have.nested.property('args.account').equal(acc.anyone);
+	});
+
+	it('should emit event when money added to the box', async function() {
+		const goalAmount = web3.toWei('1000', 'finney');
+		await this.inst.setGoal(goalAmount, {from: acc.anyone});
+		const goalAndSomeMoreAmount = web3.toWei('1001', 'finney')
+		await this.inst.addMoney({from: acc.anyone, value: goalAndSomeMoreAmount});
+
+		const trans = await this.inst.withdraw({from: acc.anyone});
+
+		const Event = await expectEvent.inTransaction(trans, "MoneyTaken");
+		Event.should.have.nested.bignumber.property('args.amount').equal(goalAndSomeMoreAmount);
+		Event.should.have.nested.property('args.account').equal(acc.anyone);
+	});
+
 
 });
 
