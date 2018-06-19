@@ -11,6 +11,17 @@ chai.should();
 
 const MoneyBox = artifacts.require("MoneyBox");
 
+async function assertBalanceDiff(callInfo, wantEtherDiff) {
+	const etherBefore = web3.eth.getBalance(callInfo.address);
+
+	const ret = await callInfo.func(...callInfo.args, {from: callInfo.address, gasPrice: callInfo.gasPrice});
+	const gasUsed = new BigNumber(ret.receipt.gasUsed);
+
+	const etherAfter = web3.eth.getBalance(callInfo.address);
+	const etherUsed = gasUsed.mul(callInfo.gasPrice);
+	etherAfter.sub(etherBefore).add(etherUsed).should.be.bignumber.equal(wantEtherDiff);
+}
+
 contract('MoneyBox', function(accounts) {
 	const acc = {anyone: accounts[0], owner: accounts[1], anyoneElse: accounts[2]};
 	beforeEach(async function () {
@@ -154,6 +165,21 @@ contract('MoneyBox', function(accounts) {
 		Event.should.have.nested.property('args.account').equal(acc.anyone);
 	});
 
+	it('should return correct sums for multiple users', async function() {
+		const gasPrice = 10;
+		const goal1 = web3.toWei('1000', 'finney');
+		const goal2 = web3.toWei('100', 'finney');
+		await this.inst.setGoal(goal1, {from: acc.anyone});
+		await this.inst.setGoal(goal2, {from: acc.anyoneElse});
+		await this.inst.addMoney({from: acc.anyone, value: goal1});
+		await this.inst.addMoney({from: acc.anyoneElse, value: goal2});
+
+		const withdrawAnyoneElse = {func: this.inst.withdraw, args: [], address: acc.anyoneElse, gasPrice};
+		await assertBalanceDiff(withdrawAnyoneElse, goal2)
+
+		const withdrawAnyone = {func: this.inst.withdraw, args: [], address: acc.anyone, gasPrice};
+		await assertBalanceDiff(withdrawAnyone, goal1)
+	});
 
 });
 
